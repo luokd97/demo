@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.LockModeType;
 import java.util.Optional;
 
-@Transactional
 public interface ArticleRepository extends CrudRepository<Article, Long> {
     //    @Query(value = "select * from article where id = ?1 for update",nativeQuery=true)
     @Query(value = "select * from article a where a.id = :id for update", nativeQuery = true)
@@ -23,4 +23,12 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Article a where a.id = :id")
     Optional<Article> findArticleWithPessimisticLock(Long id);
+
+    @Lock(value = LockModeType.OPTIMISTIC)
+    @Query("select a from Article a where a.id = :id")
+    Optional<Article> findArticleWithOptimisticLock(Long id);
+
+    @Modifying
+    @Query("update Article set commentCount=commentCount+1, version=version+1 where id=?1")
+    int saveWithOptimistic(Long id);
 }
