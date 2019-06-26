@@ -13,6 +13,8 @@ public class Article {
 
     private String title;
 
+    private String content;
+
     private Long commentCount;
 
 //    @Version

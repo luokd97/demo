@@ -1,9 +1,11 @@
 package com.example.demo.domain;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
@@ -29,6 +31,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     Optional<Article> findArticleWithOptimisticLock(Long id);
 
     @Modifying
-    @Query("update Article set commentCount=commentCount+1, version=version+1 where id=?1")
-    int saveWithOptimistic(Long id);
+    @Query("update Article a set a.commentCount= :commentCount, a.version=version+1 where a.id= :id and a.version=:version")
+    int saveWithOptimistic(@Param("id")Long id, @Param("commentCount")Long commentCount, @Param("version")Long version);
 }

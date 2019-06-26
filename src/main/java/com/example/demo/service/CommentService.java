@@ -37,7 +37,10 @@ public class CommentService {
         Article article = articleOptional.get();
 //        article.setCommentCount(article.getCommentCount() + 1);
 //        articleRepository.saveWithOptimistic(article.getId());
-        articleRepository.saveWithOptimistic(articleId);
+        int count = articleRepository.saveWithOptimistic(article.getId(),article.getCommentCount()+1,article.getVersion());
+        if (count==0){
+            throw new RuntimeException("提交失败");
+        }
 //        articleRepository.save(article);
     }
 }
