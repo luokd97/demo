@@ -14,7 +14,7 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
   application:
-    name: Bootstrap Spring Boot1
+    name: demo1
   security:
     user:
       name: admin
